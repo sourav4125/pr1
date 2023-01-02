@@ -1,27 +1,27 @@
 const mongoose = require("mongoose");
-const email = require("mongoose-type-email");
+// const email = require("mongoose-type-email");
 // const password = require("password");
 const authorSchema = new mongoose.Schema({
     fname: {
         type: String,
-        require: true
+        required: true
     },
     lname: {
         type: String,
-        require: true
+        required: true
     },
     title: {
         type: String,
         enum: ["Mr", "Mrs", "Miss"],
-        require: true
+        required: true
     }, email: {
-        type: email,
-        require: true,
+        type: String,
+        required: true,
         unique: true
     },
     password: {
         type: String,
-        require: true
+        required: true
 
     }
 }, { timestamps: true })
