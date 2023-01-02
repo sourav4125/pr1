@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const email = require("mongoose-type-email");
-const password = require("password");
+// const password = require("password");
 const authorSchema = new mongoose.Schema({
     fname: {
         type: String,
@@ -20,7 +20,7 @@ const authorSchema = new mongoose.Schema({
         unique: true
     },
     password: {
-        type: password,
+        type: String,
         require: true
 
     }
