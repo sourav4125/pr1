@@ -9,7 +9,6 @@ router.get("/test-me", function (req, res) {
 })
 
 router.post("/authors", authorController.createrAuthor);
-
 router.post("/blogs",blogController.blogUser)
 
 
