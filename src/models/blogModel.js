@@ -25,11 +25,15 @@ const blogSchema = new mongoose.Schema( {
         default: false,
         date : Date.now()
     },
-    publishedAt:{String},
+    
+    publishedAt:{
+     date : Date.now(),
+    },
+
     isPublished  :{
     type:Boolean,
     default: false,
-    date : Date.now()
+    
     },
 }},{ timestamps: true });
 

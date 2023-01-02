@@ -9,16 +9,15 @@ const blogUser = async function (req, res) {
   }
   catch (err)
   {
-  console.log("this is the error",err)
   res.status(400).send({status:false, msg:"Please Check Your Input", error : err})  
-  }
-  
-  const {author}= req.body
-  const authorId = await blogModel.findOne({_id: author})
-  if (!authorId){
+  }  
+  const {author}= req.body.authorId
+  const authorDetails = await authorModel.findOne({_Id: author})  
+  if (!authorDetails){
     return res.send({status:false, message:"Please Enter Valid AuthorId"})
-  } 
+  }
 }
+
     
 
 
