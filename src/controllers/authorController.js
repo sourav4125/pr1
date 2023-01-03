@@ -1,11 +1,6 @@
 const authModel = require("../models/authorModel");
 const validation = require("../middleware/validation");
 
-/* points to validates .
-   1. password is valid.
-   2. email already exist
-   3. 
-   */
 const createrAuthor = async function (req, res) {
   try {
     let data = req.body;
