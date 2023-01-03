@@ -12,8 +12,14 @@ const createrAuthor = async function (req, res) {
     if (!data.fname) {
       return res.status(422).send({ msg: "fname  is missing" });
     }
+    if (!validation.isValidName(data.fname)) {
+      return res.status(400).send({msg: "fname Only contain Alphabate"  })
+    }
     if (!data.lname) {
       return res.status(422).send({ msg: "lname is missing" });
+    }
+    if (!validation.isValidName(data.lname)) {
+      return res.status(400).send({msg: "lname Only contain Alphabate"  })
     }
     if (!data.title) {
       return res.status(422).send({ msg: "title is missing" });
@@ -37,13 +43,9 @@ const createrAuthor = async function (req, res) {
           message: `${email} email address is already registered`,
         });
     }
-    // if (!validation.passwordVal(data.password)) {
-    //   return res
-    //     .status(400)
-    //     .send({
-    //       msg: "password at least 1 lowercase, at least 1 uppercase,contain at least 1 numeric character, at least one special character, range between 8-12",
-    //     });
-    // }
+    if (!validation.passwordVal(data.password)) {
+      return res.status(400).send({msg: "password at least 1 lowercase, at least 1 uppercase,contain at least 1 numeric character, at least one special character, range between 8-12"});
+    }
     let createdData = await authModel.create(data);
     res.status(201).send({ result: createdData });
   } catch (error) {
