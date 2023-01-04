@@ -62,7 +62,6 @@ const login = async function (req, res) {
   try {
     let { email, password } = req.body;
     let author = await authModel.findOne({ emai: email, password: password });
-    console.log(author);
     if (!author) {
       return res
         .status(404)
@@ -82,6 +81,8 @@ const login = async function (req, res) {
     res.status(500).send({ status: false, msg: error.message });
   }
 };
+
+
 
 module.exports.createrAuthor = createrAuthor;
 module.exports.login = login;

@@ -1,9 +1,6 @@
+const mongoose = require("mongoose")
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
-const{ matchId } = require("../validation/validation");
-// const {isValidObjectId} = require("mongoose");
-const mongoose = require("mongoose")
-
 
 
 const blogUser = async function (req, res) {
@@ -35,7 +32,7 @@ const getBlogs = async function (req, res) {
   try {
     let qData = req.query;
     let findData = await blogModel.find({
-      $and: [{ isDeleted: false, isPublished: true }, { qData }]}); // modification here
+      $and: [{ isDeleted: false, isPublished: true }, { qData }]}); 
     if (!findData) {
       return res.status(404).send({ status: false, msg: "No Such Data Exist" });
     }
@@ -50,17 +47,9 @@ const updateBlog = async function (req, res) {
   try {
     const data = req.body;
     const blogId = req.params.blogId;
-
-    // if (blogId.length != 24) {
-    //   return res.status(404).send({ status: false, msg: "Enter Blog Id" });
-    // }
-    // const ObjectId = require("mongodb").ObjectId
-    // const validId = ObjectId.isValid(blogId)
-    console.log("i am reaching 3")
-    if(!matchId(blogId) ){
+    if(!mongoose.isValidObjectId(blogId) ){
       return res.status(404).send({ status: false, msg: "Blog Id is incorrect" });
     }
-
     const deletedData = await blogModel.findById(blogId);
     if (deletedData.isDeleted == true) {
       return res.status(200).send({ status: false, msg: "blog already deleted" });
@@ -85,20 +74,14 @@ const updateBlog = async function (req, res) {
   }
 };
 
-/*
-figure out how to handle empty params from post man
-
-
-*/
 
 const deleteParam = async function (req, res) {
   try {
     let data = req.params;
-  //  
-    // if (!data.blogId) {
-    //   return res.status(400).send({ msg: "ID in params is missing" });
-    // }
-    // 
+
+    if(!mongoose.isValidObjectId(data) ){
+      return res.status(404).send({ status: false, msg: "Blog Id is incorrect" });
+    }
     const deletedData = await blogModel.findById(data.blogId);
     if (deletedData.isDeleted == true) {
       return res.status(200).send({ status: false, msg: "blog already deleted" });
@@ -113,8 +96,6 @@ const deleteParam = async function (req, res) {
     return res.status(500).send({status: false, msg: error.message });
   }
 };
-
-// check why this is not working, when we apply middlewares 
 
 
 const deleteQuery = async function (req, res) {

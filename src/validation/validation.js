@@ -12,30 +12,20 @@ const passwordVal = function(password){
     return strongRegex.test(password)
 }
 
-// const xyz = function (ObjectId) {
-//     return mongoose.Types.ObjectId.isValid(ObjectId)
-    
-// }
-// const ObjectId = require("mongodb").ObjectId
-// const validId = ObjectId.isValid(blogId)
-
-
 
  const isValidName = function (name) {
      const fnameRegex = /^[a-zA-Z]+$/;
      return fnameRegex.test(name);
  };
  
- const matchId = function(idMatch){
-    const regCheck = new RegExp(/^[0-9a-fA-F]{24}$/);
-    return regCheck.test(idMatch)
- }
-//  let checkForValidMongoDbID = new RegExp("^[0-9a-fA-F]{24}$");
-//  console.log(checkForValidMongoDbID.test(firstUserID))
+//  const matchId = function(idMatch){
+//     const regCheck = new RegExp(/^[0-9a-fA-F]{24}$/);
+//     return regCheck.test(idMatch)
+//  }
 
 module.exports.isValidateEmail= isValidateEmail
 module.exports.passwordVal= passwordVal
-// module.exports.xyz= xyz
-module.exports.matchId=matchId
+
+// module.exports.matchId=matchId
 module.exports.isValidName= isValidName
 
