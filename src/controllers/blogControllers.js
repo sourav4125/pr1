@@ -1,6 +1,10 @@
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
-const { isValidateEmail } = require("../validation/validation");
+const{ matchId } = require("../validation/validation");
+// const {isValidObjectId} = require("mongoose");
+const mongoose = require("mongoose")
+
+
 
 const blogUser = async function (req, res) {
   try {
@@ -12,7 +16,7 @@ const blogUser = async function (req, res) {
       return res.status(400).send({status: false, msg: "body is missing" });
     }
     if (!data.authorId) {
-      return res.status(400).send({ status: false, msg: "body is missing" });
+      return res.status(400).send({ status: false, msg: "autherId is missing" });
     }
     if (!data.category) {
       return res.status(400).send({ status: false, msg: "category is missing" });
@@ -31,8 +35,7 @@ const getBlogs = async function (req, res) {
   try {
     let qData = req.query;
     let findData = await blogModel.find({
-      $and: [{ isDeleted: false, isPublished: true }, { $or: [{ qData }] }],
-    });
+      $and: [{ isDeleted: false, isPublished: true }, { qData }]}); // modification here
     if (!findData) {
       return res.status(404).send({ status: false, msg: "No Such Data Exist" });
     }
@@ -47,13 +50,20 @@ const updateBlog = async function (req, res) {
   try {
     const data = req.body;
     const blogId = req.params.blogId;
-    console.log(blogId)
-    if (blogId.length <= 1) {
-      return res.status(404).send({ status: false, msg: "Enter Blog Id" });
+
+    // if (blogId.length != 24) {
+    //   return res.status(404).send({ status: false, msg: "Enter Blog Id" });
+    // }
+    // const ObjectId = require("mongodb").ObjectId
+    // const validId = ObjectId.isValid(blogId)
+    console.log("i am reaching 3")
+    if(!matchId(blogId) ){
+      return res.status(404).send({ status: false, msg: "Blog Id is incorrect" });
     }
+
     const deletedData = await blogModel.findById(blogId);
     if (deletedData.isDeleted == true) {
-      return res.status(404).send({ status: false, msg: "blog already deleted" });
+      return res.status(200).send({ status: false, msg: "blog already deleted" });
     }
     const updatedBlogData = await blogModel.findOneAndUpdate(
       { _id: blogId },
@@ -89,6 +99,10 @@ const deleteParam = async function (req, res) {
     //   return res.status(400).send({ msg: "ID in params is missing" });
     // }
     // 
+    const deletedData = await blogModel.findById(data.blogId);
+    if (deletedData.isDeleted == true) {
+      return res.status(200).send({ status: false, msg: "blog already deleted" });
+    }
     let deletedBlog = await blogModel.findOneAndUpdate(
       { _id: data.blogId },
       { $set: { isDeleted: true },deletedAt : new Date() },
@@ -106,6 +120,12 @@ const deleteParam = async function (req, res) {
 const deleteQuery = async function (req, res) {
   try {
   let data = req.query;
+    /* we have to pass from path params for un-commenting this
+  const deletedData = await blogModel.findById(data.blogId);
+  if (deletedData.isDeleted == true) {
+    return res.status(200).send({ status: false, msg: "blog already deleted" });
+  }
+*/
   const save = await blogModel.updateMany(
     { $and: [{ data }, { isDeleted: false }] },
     { $set: { isDeleted: true } , deletedAt : new Date()},

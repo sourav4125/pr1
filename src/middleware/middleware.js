@@ -3,57 +3,75 @@ const blogModel = require("../models/blogModel");
 
 const loginCheck = async function (req, res, next) {
   try {
-    const token = req.headers["x-api-key"];
-    if (!token) {
+    const hData = req.headers["x-api-key"];
+    if (!hData) {
       return res
-        .status(403)
+        .status(400)
         .send({ status: false, msg: `headers is missing in request` });
     }
-    const decodedToken = jwt.verify(token, "thisIsASecretKeyOfAPNAgroup");
-    if (!decodedToken) {
-      return res
-        .status(403)
-        .send({
-          status: false,
-          msg: `Invalid authentication token in request`,
-        });
-    }
-    next();
+    const decodedToken = jwt.verify(hData, "thisIsASecretKeyOfAPNAgroup",(err,decodedToken)=>{
+     console.log(decodedToken)
+      if(err){
+        return res.status(400).send({status: false, msg: err.message})
+      }else {
+        req.decodedToken = decodedToken
+        console.log("i m reaching 1")
+        next();
+      }
+      
+    });
+    // if (!decodedToken) {
+    //   return res
+    //     .status(403)
+    //     .send({
+    //       status: false,
+    //       msg: `Invalid authentication token in request`,
+    //     });
+    // }
+   
   } catch (error) {
     res.status(500).send({ status: false, Error: error.message });
   }
 };
+
 const authorise = async function (req, res, next) {
 try{
-    const token = req.headers["x-api-key"];
-    if (!token) {
-      return res
-        .status(403)
-        .send({ status: false, msg: `headers is missing in request` });
-    }
-    const decodedToken = jwt.verify(token, "thisIsASecretKeyOfAPNAgroup");
+    // const hData = req.headers["x-api-key"];
+    // if (!hData) {
+    //   return res
+    //     .status(403)
+    //     .send({ status: false, msg: `headers is missing in request` });
+    // }
+    // const decodedToken = jwt.verify(hData, "thisIsASecretKeyOfAPNAgroup",(err )=>{
+    //   if(err)return res.status(400).send({status: false, msg: err.message})
+    // });
     // console.log(decodedToken)
-    if (!decodedToken) {
-      return res
-        .status(403)
-        .send({
-          status: false,
-          msg: `Invalid authentication token in request`,
-        });
-    }
+    // if (!decodedToken) {
+    //   return res
+    //     .status(403)
+    //     .send({
+    //       status: false,
+    //       msg: `Invalid authentication token in request`,
+    //     });
+    // }
+    // req.decodedToken = decodedToken
+  
+
+
   let blogId = req.params.blogId;
-  let authorId = decodedToken.authorid;
+  let authorId = req.decodedToken.authorid;
 
   let extId = await blogModel.findOne({_id: blogId})
+  if(!extId){
+    return res.status(404).send({msg: "blogId does not exist"})
+  }
   let extAuthId= extId.authorId
-  console.log(extAuthId)
-  console.log("i m middleware")
+ 
   if(authorId!=extAuthId){
     return res.send({ status: false, msg: "you are not allowed to make change in others DATA" })
   }
-  
+  console.log("i m reaching 2")
   next();
-
 }catch(error){
     res.status(500).send({status:false, Error :error.message})
 }
