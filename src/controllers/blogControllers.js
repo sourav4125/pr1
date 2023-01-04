@@ -1,6 +1,6 @@
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
-const { isValidateEmail } = require("../middleware/validation");
+const { isValidateEmail } = require("../validation/validation");
 
 const blogUser = async function (req, res) {
   try {
@@ -47,7 +47,8 @@ const updateBlog = async function (req, res) {
   try {
     const data = req.body;
     const blogId = req.params.blogId;
-    if (blogId.length <= 0) {
+    console.log(blogId)
+    if (blogId.length <= 1) {
       return res.status(404).send({ status: false, msg: "Enter Blog Id" });
     }
     const deletedData = await blogModel.findById(blogId);
@@ -68,7 +69,7 @@ const updateBlog = async function (req, res) {
       { new: true }
     );
 
-    res.status(201).send({ status: true, data: updatedBlogData });
+    res.status(200).send({ status: true, data: updatedBlogData });
   } catch (error) {
     res.status(500).send({ status: false, msg: error.message });
   }
@@ -98,6 +99,8 @@ const deleteParam = async function (req, res) {
     return res.status(500).send({status: false, msg: error.message });
   }
 };
+
+// check why this is not working, when we apply middlewares 
 
 
 const deleteQuery = async function (req, res) {

@@ -11,10 +11,13 @@ const passwordVal = function(password){
     return strongRegex.test(password)
 }
 
+
+/*
 // const isValidName = function (name) {
 //     const fnameRegex = /^[a-zA-Z]+$/;
 //     return fnameRegex.test(name).trim();
 // };
+*/
 
 
 module.exports.isValidateEmail= isValidateEmail

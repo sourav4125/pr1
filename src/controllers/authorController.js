@@ -1,5 +1,6 @@
 const authModel = require("../models/authorModel");
-const validation = require("../middleware/validation");
+const validation = require("../validation/validation");
+const jwt = require("jsonwebtoken")
 
 const createrAuthor = async function (req, res) {
   try {
@@ -25,21 +26,30 @@ const createrAuthor = async function (req, res) {
     const { email } = req.body;
     const isEmailAlredyUsed = await authModel.findOne({ email });
     if (isEmailAlredyUsed) {
-      return res
-        .status(422)
-        .send({
-          status: false,
-          message: `${email} email address is already registered`,
-        });
-    }
-    if (!validation.passwordVal(data.password)) {
+      return res.status(422).send({status: false, message: `${email} email address is alread registered`});
+    } if (!validation.passwordVal(data.password)) {
       return res.status(400).send({status: false, msg: "password at least 1 lowercase, at least 1 uppercase,contain at least 1 numeric character, at least one special character, range between 8-12"});
     }
     let createdData = await authModel.create(data);
-    res.status(201).send({status: true, result: createdData });
+    res.status(201).send({status: true, data: createdData });
   } catch (error) {
     res.status(500).send({status: false, msg: error.message });
   }
 };
 
+const login = async function (req,res){
+  let {email,password} = req.body
+  let author = await authModel.findOne({emai:email,password:password})
+console.log(author)
+  if(!author){
+    return res.status().send({status:false, msg: "author doesn't exist"})
+  } 
+  let token = jwt.sign({authorid:author._id,email:author.email},"thisIsASecretKeyOfAPNAgroup")
+  res.setHeader('x-api-key',token)
+  res.status(200).send({status:true,  data:{"token": token}, msg: "successfully loggedIn"})
+}
+
+
+
 module.exports.createrAuthor = createrAuthor;
+module.exports.login = login;

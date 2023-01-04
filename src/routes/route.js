@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const blogController= require("../controllers/blogControllers");
 const authorController = require("../controllers/authorController");
+const midd = require("../middleware/middleware");
 
 
 router.get("/test-me", function (req, res) {
@@ -9,11 +10,15 @@ router.get("/test-me", function (req, res) {
 })
 
 router.post("/authors", authorController.createrAuthor); 
-router.post("/blogs",blogController.blogUser);
-router.get("/blogs", blogController.getBlogs);
-router.put("/blogs/:blogId", blogController.updateBlog);
-router.delete("/blogs/:blogId" , blogController.deleteParam);
-router.delete("/blogs", blogController.deleteQuery);
+
+router.post("/login", authorController.login)
+
+
+router.post("/blogs",midd.loginCheck,blogController.blogUser);
+router.get("/blogs",midd.loginCheck,blogController.getBlogs);
+router.put("/blogs/:blogId",midd.loginCheck,midd.authorise, blogController.updateBlog);
+router.delete("/blogs/:blogId",midd.loginCheck,midd.authorise, blogController.deleteParam);
+router.delete("/blogs",midd.loginCheck,midd.authorise, blogController.deleteQuery);
 
 
 
