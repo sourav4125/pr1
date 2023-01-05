@@ -67,10 +67,7 @@ const login = async function (req, res) {
         .status(404)
         .send({ status: false, msg: "author doesn't exist" });
     }
-    let token = jwt.sign(
-      { authorid: author._id, email: author.email },
-      "thisIsASecretKeyOfAPNAgroup"
-    );
+    let token = jwt.sign({authorid:author._id,email: author.email},"thisIsASecretKeyOfAPNAgroup");
     res.setHeader("x-api-key", token);
     res.status(200).send({
       status: true,

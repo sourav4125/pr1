@@ -110,7 +110,7 @@ const deleteQuery = async function (req, res) {
           return res.status(401).send({status: false, msg: "You are not allowed to modify other's data"});
       }
       if (blogData.isDeleted == true) {
-          return res.status(404).send({ msg: "Blog is already deleted" });
+          return res.status(404).send({status:false, msg: "Blog is already deleted" });
       }
       const save = await blogModel.findOneAndUpdate(
           data,
