@@ -17,7 +17,7 @@ const blogSchema = new mongoose.Schema(
       type: ObjectId,
       required: true,
       trim: true,
-      ref: "authData"
+      ref: "authData",
     },
     tags: {
       type: [String],
@@ -37,7 +37,7 @@ const blogSchema = new mongoose.Schema(
       default: false,
       date: Date.now(),
     },
-    deletedAt : Date,
+    deletedAt: Date,
     publishedAt: Date,
     isPublished: {
       type: Boolean,

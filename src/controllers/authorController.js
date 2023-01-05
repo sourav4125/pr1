@@ -82,7 +82,5 @@ const login = async function (req, res) {
   }
 };
 
-
-
 module.exports.createrAuthor = createrAuthor;
 module.exports.login = login;
