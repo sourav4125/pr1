@@ -80,7 +80,7 @@ const deleteParam = async function (req, res) {
   try {
     let data = req.params;
 
-    if(!mongoose.isValidObjectId(data) ){
+    if(!mongoose.isValidObjectId(data.blogId) ){
       return res.status(404).send({ status: false, msg: "Blog Id is incorrect" });
     }
     const deletedData = await blogModel.findById(data.blogId);
