@@ -35,7 +35,7 @@ try{
   let extAuthId= extId.authorId
  
   if(authorId!=extAuthId){
-    return res.send({ status: false, msg: "you are not allowed to make change in others DATA" })
+    return res.send({ status: false, msg: "You are not allowed to modify other's data" })
   }
   next();
 }catch(error){
