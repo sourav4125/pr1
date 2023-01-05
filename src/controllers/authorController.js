@@ -61,7 +61,7 @@ const createrAuthor = async function (req, res) {
 const login = async function (req, res) {
   try {
     let { email, password } = req.body;
-    let author = await authModel.findOne({ emai: email, password: password });
+    let author = await authModel.findOne({ email: email, password: password });
     if (!author) {
       return res
         .status(404)
